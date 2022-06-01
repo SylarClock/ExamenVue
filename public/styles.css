@@ -1,0 +1,61 @@
+html, body{
+    min-height: 100%;
+}
+body{
+    background: rgb(255,255,255);
+    background: linear-gradient(190deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(0,212,255,1) 100%);
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+}
+.container{
+    display: flex;
+    flex: 1;
+    margin: 0 50px;
+    box-shadow: 0 8px 20px 0 rgb(0 0 0 / 10%);
+    background-color: #fff;
+    border-radius: 12px;
+}
+
+.table{
+    flex: 1;
+    min-height: 350px;
+    margin: 25px;
+}
+.table-head{
+    display: flex;
+    font-weight: bold;
+    flex: 1;
+    height: 27px;
+    margin-bottom: 10px;
+}
+.table-body .row{
+    display: flex;
+    line-height: 1.7rem;
+    padding: 10px 0;
+    border-radius: 8px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.table-body .row:nth-child(2n+1){
+    background: #ade4ef;
+}
+.table-body .row:hover{
+    background: #0ca1bf;
+    color: #fff;
+}
+.table-head div{
+    border-style: solid;
+    border-width: 0;
+    border-color: rgb(196, 196, 196);
+    border-right-width: 1px;
+    border-left-width: 1px;
+}
+.table .col{
+    flex: 1;
+}
+.table .col-2{
+    flex: 2;
+}
