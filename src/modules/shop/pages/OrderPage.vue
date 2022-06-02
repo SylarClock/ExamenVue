@@ -1,6 +1,7 @@
 <template>
     <div class="headerPage">
     <h1>Orden #{{noOrder}}</h1>
+    <h3 class="green animate__animated animate__heartBeat" v-if="status=='paid'">pagado</h3>
     </div>
     <div class="button-cntr"
         :class="isFold ? 'animate__animated animate__fadeOutUp':'animate__animated animate__fadeInDown' "
@@ -80,6 +81,18 @@
                 </div>
 
             </div>
+            <div class="table-footer">
+                <div class="row">
+                    <div class="col-2 text-left total-cnt">
+                        <h5 class="subtotal">Subtotal: $ {{subTotal}}</h5>
+                        <h2 class="total">Total: $ {{total}}</h2>
+                    </div>
+                    <div class="col-5"></div>
+                    <div class="col pay-container" v-if="status !='paid'">
+                        <button class="btn-rnd" v-on:click="payOrder">Pagar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -97,8 +110,10 @@ export default {
             sku: "",
             name: "",
             price: 0,
-            quantity: 0
-
+            quantity: 0,
+            status:"",
+            subTotal: "",
+            total: ""
         }
     },
     methods:{
@@ -112,6 +127,9 @@ export default {
             this.id = t_id;
             this.items = selected.items;
             this.noOrder = selected.number;
+            this.status = selected.status.status;
+            this.subTotal = selected.totals.subtotal;
+            this.total = selected.totals.total;
             console.log("items", this.items);
         },
         toggleMenu(){
@@ -125,8 +143,6 @@ export default {
                 this.price > 0 &&
                 this.quantity > 0 
             ){
-
-                
                 this.selected.items.push({
                     id: Date.now(),
                     sku: this.sku,
@@ -144,6 +160,7 @@ export default {
                         const priceSub = subTotal + (this.price * this.quantity);
                         order.totals.subTotal = "" + priceSub;
                         order.totals.total =  parseFloat( (priceSub +  Number(order.totals.tax)) ).toFixed(2).toString();
+                         order.status.status = "any";
                         return order;
                     }else{
                         return order;
@@ -154,6 +171,21 @@ export default {
                 this.setItems();
                 this.toggleMenu();
             }
+
+        },
+        payOrder(){
+            const orederArr = JSON.parse(localStorage.dataExam);
+    
+            const newArr = orederArr.map((order)=>{
+                if(order.id == this.id ){
+                    order.status.status = "paid";
+                    return order;
+                }else{
+                    return order;
+                }
+            });
+            this.status = "paid"
+            localStorage.dataExam = JSON.stringify(newArr);
 
         }
     },
@@ -166,6 +198,13 @@ export default {
 </script>
 
 <style scoped>
+    .pay-container{
+        align-items: center;
+        display: flex;
+    }
+    .text-left{
+        text-align: left;
+    }
     .button-cntr{
         display: flex;
         padding: 0 48px;
@@ -186,8 +225,23 @@ export default {
         transition: all .3s cubic-bezier(.645,.045,.355,1);
         cursor: pointer;
     }
+    .total-cnt{
+        color: #686868;
+    }
+    .table-body{
+        min-height: 250px;
+    }
     .red{
         background: #b00f00;
+    }
+    .green{
+        color: aqua;
+    }
+    .subtotal{
+        margin-bottom: 5px;
+    }
+    .total{
+        margin-top: 7px;
     }
     .bg-blue{
         background: rgb(11,168,127);
@@ -211,7 +265,9 @@ export default {
         display: block;
         padding: 25px 35px 0 35px;
     }
-
+    .table-footer{
+        margin-top: 50px;
+    }
     .btn-rnd:hover{
         color:#00aab0;
         background: #fff;
